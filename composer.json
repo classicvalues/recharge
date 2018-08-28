@@ -1,5 +1,9 @@
 {
     "name": "huel-global/recharge",
+    "description": "PHP wrapper for reCharge Payments API",
+    "require": {
+        "php": "^7.0"
+    },
     "autoload": {
         "psr-4": {
             "Huel\\Recharge\\": "src/"
