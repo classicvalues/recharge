@@ -1,0 +1,8 @@
+{
+    "name": "huel-global/recharge",
+    "autoload": {
+        "psr-4": {
+            "Huel\\Recharge\\": "src/"
+        }
+    }
+}
