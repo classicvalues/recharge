@@ -149,6 +149,13 @@ class API {
                     continue;
                 }
 
+                if ($returnError['msg'] == 'The requested URL returned error: 409 Conflict') {
+                    \Log::info('[Recharge\API] Sleeping for 1 seconds (409 Race condition)');
+                    sleep(1);
+                    $retry = true;
+                    continue;
+                }
+
                 if ($returnError['msg'] == 'The requested URL returned error: 429 TOO MANY REQUESTS') {
                     \Log::info('[Recharge\API] Sleeping for 4 seconds (Too Many Requests)');
                     sleep(4);
