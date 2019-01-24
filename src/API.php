@@ -154,18 +154,18 @@ class API {
                 $returnInfo[trim($key)] = trim($val);
             }
 
+            if (isset($returnInfo['HTTP_CODE']) && strpos($returnInfo['HTTP_CODE'], 'HTTP/1.1 409 CONFLICT') > -1) {
+                \Log::info('[Recharge\API] Sleeping for 2 seconds (409 Conflict)');
+                sleep(2);
+                $retry = true;
+                continue;
+            }
+
     	    if ($returnError['number']) {
                 // if recharge has taken too long
                 if (in_array($returnError['number'], [CURLE_OPERATION_TIMEDOUT, CURLE_OPERATION_TIMEOUTED])) {
                     $retry = true;
                     \Log::debug('[Recharge\API] Request timed out, let\'s try again');
-                    continue;
-                }
-
-                if (isset($returnInfo['HTTP_CODE']) && strpos($returnInfo['HTTP_CODE'], 'HTTP/1.1 409 CONFLICT') > -1) {
-                    \Log::info('[Recharge\API] Sleeping for 2 seconds (409 Conflict)');
-                    sleep(2);
-                    $retry = true;
                     continue;
                 }
 
