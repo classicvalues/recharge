@@ -143,17 +143,15 @@ class API {
 
             // Parse extra info
             $returnInfo = null;
-            if ($options['all_data']) {
-                foreach($info as $k => $header)
+            foreach($info as $k => $header)
+            {
+                if (strpos($header, 'HTTP/') > -1)
                 {
-        	        if (strpos($header, 'HTTP/') > -1)
-        	        {
-                        $returnInfo['HTTP_CODE'] = $header;
-                        continue;
-                    }
-                    list($key, $val) = explode(':', $header);
-                    $returnInfo[trim($key)] = trim($val);
+                    $returnInfo['HTTP_CODE'] = $header;
+                    continue;
                 }
+                list($key, $val) = explode(':', $header);
+                $returnInfo[trim($key)] = trim($val);
             }
 
     	    if ($returnError['number']) {
