@@ -162,7 +162,7 @@ class API {
                     continue;
                 }
 
-                if (isset($returnInfo['HTTP_CODE']) && $returnInfo['HTTP_CODE'] == 'HTTP\/1.1 409 CONFLICT') {
+                if (isset($returnInfo['HTTP_CODE']) && strpos($returnInfo['HTTP_CODE'], 'HTTP/1.1 409 CONFLICT') > -1) {
                     \Log::info('[Recharge\API] Sleeping for 2 seconds (409 Conflict)');
                     sleep(2);
                     $retry = true;
