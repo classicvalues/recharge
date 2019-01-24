@@ -141,6 +141,21 @@ class API {
             ];
             // curl_close($ch);
 
+            // Parse extra info
+            $returnInfo = null;
+            if ($options['all_data']) {
+                foreach($info as $k => $header)
+                {
+        	        if (strpos($header, 'HTTP/') > -1)
+        	        {
+                        $returnInfo['HTTP_CODE'] = $header;
+                        continue;
+                    }
+                    list($key, $val) = explode(':', $header);
+                    $returnInfo[trim($key)] = trim($val);
+                }
+            }
+
     	    if ($returnError['number']) {
                 // if recharge has taken too long
                 if (in_array($returnError['number'], [CURLE_OPERATION_TIMEDOUT, CURLE_OPERATION_TIMEOUTED])) {
@@ -149,9 +164,9 @@ class API {
                     continue;
                 }
 
-                if ($returnError['msg'] == 'The requested URL returned error: 409 Conflict') {
-                    \Log::info('[Recharge\API] Sleeping for 1 seconds (409 Race condition)');
-                    sleep(1);
+                if (isset($returnInfo['HTTP_CODE']) && $returnInfo['HTTP_CODE'] == 'HTTP/1.1 409 CONFLICT') {
+                    \Log::info('[Recharge\API] Sleeping for 2 seconds (409 Conflict)');
+                    sleep(2);
                     $retry = true;
                     continue;
                 }
@@ -167,21 +182,6 @@ class API {
     	    }
         }
 
-
-        // Parse extra info
-        $returnInfo = null;
-        if ($options['all_data']) {
-            foreach($info as $k => $header)
-            {
-    	        if (strpos($header, 'HTTP/') > -1)
-    	        {
-                    $returnInfo['HTTP_CODE'] = $header;
-                    continue;
-                }
-                list($key, $val) = explode(':', $header);
-                $returnInfo[trim($key)] = trim($val);
-            }
-        }
 
         if ($options['all_data']) {
             if ($options['return_array']) {
