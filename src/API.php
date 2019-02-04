@@ -154,12 +154,12 @@ class API {
                 $returnInfo[trim($key)] = trim($val);
             }
 
-            // if (isset($returnInfo['HTTP_CODE']) && strpos($returnInfo['HTTP_CODE'], 'HTTP/1.1 409 CONFLICT') > -1) {
-            //     \Log::info('[Recharge\API] Sleeping for 2 seconds (409 Conflict)');
-            //     sleep(2);
-            //     $retry = true;
-            //     continue;
-            // }
+            if (isset($returnInfo['HTTP_CODE']) && strpos($returnInfo['HTTP_CODE'], 'HTTP/1.1 409 CONFLICT') > -1) {
+                \Log::info('[Recharge\API] Sleeping for 2 seconds (409 Conflict)');
+                sleep(2);
+                $retry = true;
+                continue;
+            }
 
             if (isset($returnInfo['HTTP_CODE']) && strpos($returnInfo['HTTP_CODE'], 'HTTP/1.1 400 BAD REQUEST') > -1) {
                 if (isset($result->errors) && isset($result->errors->UNEXPECTED_VARIANT_ERROR_TYPE)) {
@@ -187,12 +187,12 @@ class API {
                     continue;
                 }
 
-                if ($returnError['msg'] == 'The requested URL returned error: 409 CONFLICT') {
-                    \Log::info('[Recharge\API] Sleeping for 2 seconds (409 Conflict)');
-                    sleep(2);
-                    $retry = true;
-                    continue;
-                }
+                // if ($returnError['msg'] == 'The requested URL returned error: 409 CONFLICT') {
+                //     \Log::info('[Recharge\API] Sleeping for 2 seconds (409 Conflict)');
+                //     sleep(2);
+                //     $retry = true;
+                //     continue;
+                // }
 
     		    throw new \Exception('ERROR #' . $returnError['number'] . ': ' . $returnError['msg']);
     	    }
