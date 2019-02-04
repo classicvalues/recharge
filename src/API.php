@@ -164,7 +164,7 @@ class API {
             if (isset($returnInfo['HTTP_CODE']) && strpos($returnInfo['HTTP_CODE'], 'HTTP/1.1 400 BAD REQUEST') > -1) {
                 if (isset($result->errors) && isset($result->errors->UNEXPECTED_VARIANT_ERROR_TYPE)) {
                     if (strpos($result->errors->UNEXPECTED_VARIANT_ERROR_TYPE, 'Shopify returned 429 rate limit regarding this call') > -1) {
-                        \Log::info('[Recharge\API] Sleeping for 2 seconds (Shopify 429)');
+                        \Log::info('[Recharge\API] Sleeping for 2 seconds (Shopify 429 / Method 1)');
                         sleep(2);
                         $retry = true;
                         continue;
@@ -187,12 +187,12 @@ class API {
                     continue;
                 }
 
-                // if ($returnError['msg'] == 'The requested URL returned error: 409 CONFLICT') {
-                //     \Log::info('[Recharge\API] Sleeping for 2 seconds (409 Conflict)');
-                //     sleep(2);
-                //     $retry = true;
-                //     continue;
-                // }
+                if ($returnError['msg'] == 'The requested URL returned error: 409 CONFLICT') {
+                    \Log::info('[Recharge\API] Sleeping for 2 seconds (409 Conflict / Method 2)');
+                    sleep(2);
+                    $retry = true;
+                    continue;
+                }
 
     		    throw new \Exception('ERROR #' . $returnError['number'] . ': ' . $returnError['msg']);
     	    }
