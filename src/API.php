@@ -86,7 +86,7 @@ class API {
             CURLOPT_VERBOSE         => $options['all_data'],
             CURLOPT_HEADER          => 1,
             CURLOPT_NOSIGNAL        => 0,
-            CURLOPT_TIMEOUT_MS      => 8000,
+            CURLOPT_TIMEOUT_MS      => 30000,
         );
 
         if (!$data || $curlOpts[CURLOPT_CUSTOMREQUEST] === 'GET') {
@@ -96,7 +96,7 @@ class API {
                 $curlOpts[CURLOPT_POSTFIELDS] = json_encode($data);
             } else {
                 // Detect if already a JSON object
-                json_decode($request['DATA']);
+                json_decode($data);
                 if (json_last_error() == JSON_ERROR_NONE) {
                     $curlOpts[CURLOPT_POSTFIELDS] = $data;
                 } else {
