@@ -172,14 +172,7 @@ class API {
                 }
             }
 
-    	    if ($returnError['number']) {
-                // if recharge has taken too long
-                if (in_array($returnError['number'], [CURLE_OPERATION_TIMEDOUT, CURLE_OPERATION_TIMEOUTED])) {
-                    $retry = true;
-                    \Log::debug('[Recharge\API] Request timed out, let\'s try again');
-                    continue;
-                }
-
+            if ($returnError['msg']) {
                 if ($returnError['msg'] == 'The requested URL returned error: 429 TOO MANY REQUESTS') {
                     \Log::info('[Recharge\API] Sleeping for 4 seconds (Too Many Requests)');
                     sleep(4);
@@ -193,9 +186,19 @@ class API {
                     $retry = true;
                     continue;
                 }
+            }
+
+    	    if ($returnError['number']) {
+                // if recharge has taken too long
+                if (in_array($returnError['number'], [CURLE_OPERATION_TIMEDOUT, CURLE_OPERATION_TIMEOUTED])) {
+                    $retry = true;
+                    \Log::debug('[Recharge\API] Request timed out, let\'s try again');
+                    continue;
+                }
 
     		    throw new \Exception('ERROR #' . $returnError['number'] . ': ' . $returnError['msg']);
     	    }
+
         }
 
 
