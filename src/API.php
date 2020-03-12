@@ -155,7 +155,14 @@ class API {
             }
 
             if (isset($returnInfo['HTTP_CODE']) && strpos($returnInfo['HTTP_CODE'], 'HTTP/1.1 409 CONFLICT') > -1) {
-                \Log::info('[Recharge\API] Sleeping for 2 seconds (409 Conflict / Method 1)');
+                \Log::info('[Recharge\API] Sleeping for 2 seconds (409 Conflict)');
+                sleep(2);
+                $retry = true;
+                continue;
+            }
+
+            if (isset($returnInfo['HTTP_CODE']) && strpos($returnInfo['HTTP_CODE'], 'HTTP/1.1 429 TOO MANY REQUESTS') > -1) {
+                \Log::info('[Recharge\API] Sleeping for 2 seconds (429 Too Many Requests)');
                 sleep(2);
                 $retry = true;
                 continue;
@@ -169,22 +176,6 @@ class API {
                         $retry = true;
                         continue;
                     }
-                }
-            }
-
-            if ($returnError['msg']) {
-                if ($returnError['msg'] == 'The requested URL returned error: 429 TOO MANY REQUESTS') {
-                    \Log::info('[Recharge\API] Sleeping for 4 seconds (Too Many Requests)');
-                    sleep(4);
-                    $retry = true;
-                    continue;
-                }
-
-                if ($returnError['msg'] == 'The requested URL returned error: 409 CONFLICT') {
-                    \Log::info('[Recharge\API] Sleeping for 2 seconds (409 Conflict / Method 2)');
-                    sleep(2);
-                    $retry = true;
-                    continue;
                 }
             }
 
