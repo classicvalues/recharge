@@ -172,7 +172,7 @@ class API {
                 }
             }
 
-    	    if (isset($returnError['number'])) {
+    	    if ($returnError['number']) {
                 // if recharge has taken too long
                 if (in_array($returnError['number'], [CURLE_OPERATION_TIMEDOUT, CURLE_OPERATION_TIMEOUTED])) {
                     $retry = true;
